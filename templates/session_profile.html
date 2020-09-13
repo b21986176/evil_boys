@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <title>Kodmanya-Profile</title>
+
+<style>
+    body {
+        padding-top: 80px;
+        }
+    .card {
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      max-width: 300px;
+      margin: auto;
+      text-align: center;
+      font-family: arial;
+    }
+
+    .title {
+      color: grey;
+      font-size: 18px;
+    }
+
+    button {
+      border: none;
+      outline: 0;
+      display: inline-block;
+      padding: 8px;
+      color: white;
+      background-color: #000;
+      text-align: center;
+      cursor: pointer;
+      width: 100%;
+      font-size: 18px;
+    }
+
+    a {
+      text-decoration: none;
+      font-size: 22px;
+      color: black;
+    }
+
+    button:hover, a:hover {
+      opacity: 0.7;
+    }
+</style>
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">Kodmanya</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <a class="btn btn-primary" href="/home" role="button">Ana Sayfa</a>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <button type="button" class="btn btn-primary"> <a class="nav-link" href="/profile/{{user_name}}" data-abc="true"><span style="color:white;">{{user_name}}</span></a> </button>
+          </li>
+          <li class="nav-item">
+            <button type="button" class="btn btn-primary"> <a class="nav-link" href="/create_post" data-abc="true"><span style="color:white;">Paylaş</span></a> </button>
+          </li>
+          <li class="nav-item">
+            <button type="button" class="btn btn-primary"> <a class="nav-link" href="/logout" data-abc="true"><span style="color:white;">Çıkış</span></a> </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Content -->
+  <div class="container">
+    <div class="row">
+
+      <!-- Blog Entries Column -->
+      <div class="col-md-8">
+
+          <h2 style="text-align:center">Profil Kartı</h2>
+
+        <div class="card">
+          <img src="https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png" alt="John" style="width:100%">
+          <h1>{{person}}</h1>
+          <p class="title">Üye</p>
+          <p>Post sayısı: {{post_number}}</p>
+            <p>Yorum sayısı: {{comment_number}}</p>
+          <div style="margin: 24px 0;">
+            <a href="{{tw}}"><i class="fa fa-twitter"></i></a>
+            <a href="{{fb}}"><i class="fa fa-facebook"></i></a>
+          </div>
+        </div>
+
+
+
+        <h1 class="my-4">{{person}} adlı kullanıcının son postları</h1>
+
+        <!-- Blog Post -->
+        {{all_posts|safe}}
+        <!--
+        <div class="card mb-4">
+          <div class="card-body">
+            <h2 class="card-title">{{first_post_title}}</h2>
+            <p class="card-text">{{first_post_content}}</p>
+            <a href="/post/{{first_post_slug}}" class="btn btn-primary">Devamı &rarr;</a>
+          </div>
+          <div class="card-footer text-muted">
+           Yayın tarihi: {{first_post_date}} Yazar:
+            <a href="/profile/{{first_post_writer}}">{{first_post_writer}}</a>
+          </div>
+        </div>
+        -->
+
+
+
+
+      </div>
+
+      <!-- Sidebar Widgets Column -->
+      <div class="col-md-4">
+
+
+         <!-- Categories Widget -->
+        <div class="card my-4">
+          <h5 class="card-header">Kategoriler</h5>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-lg-6">
+                <ul class="list-unstyled mb-0">
+                  <li>
+                    <a href="/category/Python">Python</a>
+                  </li>
+                  <li>
+                    <a href="/category/Java">Java</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="col-lg-6">
+                <ul class="list-unstyled mb-0">
+                  <li>
+                    <a href="/category/JavaScript">JavaScript</a>
+                  </li>
+                  <li>
+                    <a href="/category/Diğer">Diğer</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Side Widget -->
+        <div class="card my-4">
+          <h5 class="card-header">Günün Sözü</h5>
+          <div class="card-body">
+            <blockquote class="blockquote">
+          <p class="mb-0">Hiç dinlenmemek üzere yola çıkanlar, asla yorulmazlar.</p>
+          <footer class="blockquote-footer">
+            <cite title="Source Title">Gazi Mustafa Kemal Atatürk</cite>
+          </footer>
+        </blockquote>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+    <!-- /.row -->
+
+  </div>
+  <!-- /.container -->
+<br><br><br><br>
+  <!-- Footer -->
+  <footer class="py-5 bg-dark">
+    <div class="container">
+      <p class="m-0 text-center text-white">Copyright &copy; Kodmanya 2020</p>
+    </div>
+    <!-- /.container -->
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+
+</body>
+
+</html>
