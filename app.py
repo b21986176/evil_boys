@@ -1,5 +1,5 @@
 import sqlite3 as sl
-from flask import Flask, render_template, request, url_for, session, redirect, escape, jsonify
+from flask import Flask, render_template, request, url_for, session, redirect, jsonify
 import datetime
 import hashlib
 
@@ -11,7 +11,7 @@ current_comment_id=1
 db = sl.connect("firstDatabase.db")
 cs = db.cursor()
 cs.execute("create table if not exists  Users (id INT PRIMARY KEY UNIQUE, user_name, password, email, posts, comments TEXT, tw, fb)")
-cs.execute("create table if not exists Posts (id INT PRIMARY KEY UNIQUE, slug UNIQUE, writer_name, category, title, content, comments TEXT, date TEXT )")
+cs.execute("create table if not exists Posts (id INT PRIMARY KEY UNIQUE, slug UNIQUE, writer_name, category, title, content, comments TEXT, date TEXT, ip )")
 cs.execute("create table if not exists Comments (comment_id INT PRIMARY KEY UNIQUE, commenter_name, post_slug, content, date )")
 cs.execute("create table if not exists Categories (cat_name TEXT PRIMARY KEY UNIQUE, cat_slug, posts )")
 db.commit()
@@ -46,9 +46,9 @@ def home():
        """
     for row in rows[0:3]:
         title = row[4]
-        content = row[-3][0:290]+"..."
+        content = row[-4][0:290]+"..."
         slug = row[1]
-        date = row[-1]
+        date = row[-2]
         writer = row[2]
         all_posts+=template.format(title, content, slug, date, writer, writer)
     db.commit()
@@ -69,11 +69,11 @@ def post(slug):
     comments=post_title=yazar=post_date=post_content=all_comments = ""
     for row in rows:
         if row[1]==slug:
-            comments=row[-2]
+            comments=row[-3]
             post_title = row[4]
             yazar = row[2]
-            post_date = row[-1]
-            post_content = row[-3]
+            post_date = row[-2]
+            post_content = row[-4]
     template=""" <div class="media mb-4">
           <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
           <div class="media-body">
@@ -128,9 +128,9 @@ def category(cat):
             cat_posts.append(row)
     for row in cat_posts[0:3]:
         title = row[4]
-        content = row[-3][0:290] + "..."
+        content = row[-4][0:290] + "..."
         slug = row[1]
-        date = row[-1]
+        date = row[-2]
         writer = row[2]
         all_posts += template.format(title, content, slug, date, writer, writer)
     db.commit()
@@ -202,7 +202,7 @@ def new_post():
         date=str(datetime.datetime.now())
         db = sl.connect("firstDatabase.db")
         cs = db.cursor()
-        cs.execute("insert or ignore into Posts values (?, ?, ?, ?, ?, ?, ?, ?)", (current_post_id, slug, writer, category, title, content, "", date,))
+        cs.execute("insert or ignore into Posts values (?, ?, ?, ?, ?, ?, ?, ?, ?)", (current_post_id, slug, writer, category, title, content, "", date, str(request.remote_addr)))
         cs.execute('SELECT * from Users')
         rows = cs.fetchall()
         posts=""
@@ -243,7 +243,7 @@ def comment():
         writer = ""
         for row in rows:
             if row[1] == post_slug:
-                comments = row[-2]
+                comments = row[-3]
                 writer=row[3]
         cs.execute("update Posts set comments= ? where  slug= ? ", (comments+"ayrac"+str(comment_id), post_slug))
 
@@ -285,9 +285,9 @@ def profile(user_name):
     post_number=len(user_posts)
     for row in user_posts[0:3]:
         title = row[4]
-        content = row[-3][0:290] + "..."
+        content = row[-4][0:290] + "..."
         slug = row[1]
-        date = row[-1]
+        date = row[-2]
         writer = row[2]
         all_posts += template.format(title, content, slug, date, writer, writer)
     db.commit()
@@ -335,9 +335,12 @@ def api_post():
     cs = db.cursor()
     cs.execute('SELECT * from Posts')
     rows = cs.fetchall()
+    posts=[]
+    for row in rows:
+        posts.append(row[0:8])
     db.commit()
     db.close()
-    return jsonify({'posts':rows[0:10]})
+    return jsonify({'posts':posts[0:10]})
 
 @app.route("/api/post/<id>")
 def api_post_id(id):
@@ -349,7 +352,7 @@ def api_post_id(id):
     for row in rows:
         if str(row[0])==str(id):
             post=row
-            comments=row[-2].split("ayrac")
+            comments=row[-3].split("ayrac")
     db.commit()
 
     all_comments=[]
@@ -363,7 +366,7 @@ def api_post_id(id):
     db.commit()
     db.close()
 
-    return jsonify({'comments':all_comments, 'post-'+id:post[0:6] })
+    return jsonify({'comments':all_comments, 'post-'+id:post[0:6]+[post[7]] })
 
 @app.route("/api/category")
 def api_categories():
@@ -387,7 +390,7 @@ def api_cat(cat):
     posts=[]
     for row in rows:
         if row[3]==cat:
-            posts.append(row)
+            posts.append(row[:-1])
     db.commit()
     db.close()
     return jsonify({'posts-'+cat:posts})
