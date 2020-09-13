@@ -308,7 +308,7 @@ def profile(user_name):
         return render_template("session_profile.html", person=user_name, all_posts=all_posts, post_number=post_number, fb=fb, tw=tw, comment_number=comment_number, user_name=session["username"] )
     elif "username" in session and session["username"]==user_name:
         return render_template("my_profile.html", person=user_name, all_posts=all_posts, post_number=post_number, fb=fb, tw=tw, comment_number=comment_number, user_name=session["username"] )
-    return render_template("profile.html", person=user_name, all_posts=all_posts, post_number=post_number, fb=fb, tw=tw, comment_number=comment_number, user_name=session["username"] )
+    return render_template("profile.html", person=user_name, all_posts=all_posts, post_number=post_number, fb=fb, tw=tw, comment_number=comment_number )
 
 @app.route("/social", methods = ['POST'])
 def social():
